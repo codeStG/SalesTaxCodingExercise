@@ -5,8 +5,6 @@ public interface IProduct {
 
     double getPrice();
 
-    double getItemTax();
-
     boolean isImported();
 
     boolean isTaxable();

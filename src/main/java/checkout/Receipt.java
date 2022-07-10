@@ -1,16 +1,18 @@
 package checkout;
 
-import products.impl.Item;
+import products.IProduct;
+import static checkout.Register.calculateItemTax;
 
 import java.util.List;
 
 public class Receipt {
-    private final List<Item> items;
+    private final List<IProduct> products;
     private final double subtotal;
     private final double total;
 
-    public Receipt(List<Item> items, double subtotal, double total) {
-        this.items = items;
+    //TODO: This is way too complex; a receipt prints out information. That is it
+    public Receipt(List<IProduct> products, double subtotal, double total) {
+        this.products = products;
         this.subtotal = subtotal;
         this.total = total;
     }
@@ -29,9 +31,9 @@ public class Receipt {
     }
 
     public void print() {
-        for(Item item : items) {
-            System.out.println(item.getName());
-            System.out.println("\t\t\t\t\t" + Math.round((item.getPrice() + item.getItemTax()) * 100.0) / 100.0);
+        for(IProduct product : products) {
+            System.out.println(product.getName());
+            System.out.println("\t\t\t\t\t" + Math.round((product.getPrice() + calculateItemTax(product)) * 100.0) / 100.0);
             System.out.println("--------------------------");
         }
         System.out.println("\nSubtotal: \t\t\t" + getSubtotal());

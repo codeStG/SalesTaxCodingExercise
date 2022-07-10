@@ -4,25 +4,16 @@ import checkout.Register;
 import products.IProduct;
 
 public abstract class Item implements IProduct {
-    private final String name;
-    private final double price;
-    private final boolean isImported;
-    private double itemTax;
+    private String name;
+    private double price;
+    private boolean isImported;
 
-    public Item(String name, double price, boolean isImported, Register register) {
+    //TODO: Calculations take place at Register level, NOT Product level
+    //TODO: Possibly change isTaxable to category and base taxability on it
+    public Item(String name, double price, boolean isImported) {
         this.name = name;
         this.price = price;
         this.isImported = isImported;
-        if(isImported() && isTaxable()) {
-            this.itemTax = Math.ceil((this.price * register.getSalesTax()) * 20.0) / 20.0;
-            this.itemTax += Math.ceil((this.price * register.getImportDuty()) * 20.0) / 20.0;
-        } else if(isTaxable()){
-            this.itemTax = Math.ceil((this.price * register.getSalesTax()) * 20.0) / 20.0;
-        } else if(isImported()) {
-            this.itemTax += Math.ceil((this.price * register.getImportDuty()) * 20.0) / 20.0;
-        } else {
-            this.itemTax = 0.0;
-        }
     }
 
     public String getName() {
@@ -31,10 +22,6 @@ public abstract class Item implements IProduct {
 
     public double getPrice() {
         return price;
-    }
-
-    public double getItemTax() {
-        return itemTax;
     }
 
     public boolean isImported() {
