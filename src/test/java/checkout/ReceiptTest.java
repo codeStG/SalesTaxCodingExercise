@@ -1,65 +1,50 @@
 package checkout;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import checkout.Receipt;
-import checkout.Register;
-import products.ShoppingCart;
-import products.impl.Item;
 import products.impl.NonTaxableItem;
 import products.impl.TaxableItem;
 
-import java.util.List;
-
+import static checkout.Register.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReceiptTest {
-    Register testRegister = new Register(0.10, 0.05);
-    ShoppingCart testCart = new ShoppingCart();
-    Receipt testReceipt;
+
+    @BeforeEach
+    public void clearOutRegister() {
+        reset();
+    }
 
     @Test
     public void testAccuracyOfReceiptTotal() {
-        testCart.addItem(new NonTaxableItem("Book", 12.49, false, testRegister));
-        testCart.addItem(new TaxableItem("Music CD", 14.99, false, testRegister));
-        testCart.addItem(new NonTaxableItem("Chocolate Bar", 0.85, false, testRegister));
+        scan(new NonTaxableItem("Book", 12.49, false));
+        scan(new TaxableItem("Music CD", 14.99, false));
+        scan(new NonTaxableItem("Chocolate Bar", 0.85, false));
 
-        List<Item> itemsInCart = testCart.getItems();
-        for (Item i : itemsInCart) {
-            testRegister.scan(i);
-        }
+        Receipt receipt = submit();
 
-        testReceipt = testRegister.submit(testCart.getItems());
-
-        assertEquals(29.83, testReceipt.getTotal());
+        assertEquals(29.83, receipt.getTotal());
     }
 
     @Test
     public void testAccuracyOfReceiptSubtotal() {
-        testCart.addItem(new NonTaxableItem("Box of Chocolates", 10.00, true, testRegister));
-        testCart.addItem(new TaxableItem("Bottle of Perfume", 47.50, true, testRegister));
+        scan(new NonTaxableItem("Box of Chocolates", 10.00, true));
+        scan(new TaxableItem("Bottle of Perfume", 47.50, true));
 
-        List<Item> itemsInCart = testCart.getItems();
-        for (Item i : itemsInCart) {
-            testRegister.scan(i);
-        }
+        Receipt receipt = submit();
 
-        testReceipt = testRegister.submit(testCart.getItems());
-
-        assertEquals(57.50, testReceipt.getSubtotal());
+        assertEquals(57.50, receipt.getSubtotal());
     }
 
     @Test
     public void testAccuracyOfReceiptTax() {
-        testCart.addItem(new TaxableItem("Bottle of Perfume", 27.99, true, testRegister));
-        testCart.addItem(new TaxableItem("Bottle of Perfume", 18.99, false, testRegister));
-        testCart.addItem(new NonTaxableItem("Headache Pills", 9.75, false, testRegister));
-        testCart.addItem(new NonTaxableItem("Box of Chocolates", 11.25, true, testRegister));
-        List<Item> itemsInCart = testCart.getItems();
-        for (Item i : itemsInCart) {
-            testRegister.scan(i);
-        }
-        testReceipt = testRegister.submit(testCart.getItems());
-        System.out.println(testReceipt.getTax());
-        assertEquals(6.70, testReceipt.getTax());
+        scan(new TaxableItem("Bottle of Perfume", 27.99, true));
+        scan(new TaxableItem("Bottle of Perfume", 18.99, false));
+        scan(new NonTaxableItem("Headache Pills", 9.75, false));
+        scan(new NonTaxableItem("Box of Chocolates", 11.25, true));
+
+        Receipt receipt = submit();
+
+        assertEquals(6.70, receipt.getTax());
     }
 }

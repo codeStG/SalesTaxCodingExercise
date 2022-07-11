@@ -1,28 +1,36 @@
 package products.impl;
 
+import checkout.Receipt;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import checkout.Register;
 import products.impl.TaxableItem;
 
+import static checkout.Register.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
 
 public class TaxableItemTest {
 
+    @BeforeEach
+    public void clearOutRegister() {
+        reset();
+    }
+
     @Test
     public void testTaxableImportedItemsBeingTaxedProperly() {
-        Register testRegister = new Register(0.1, 0.05);
-        TaxableItem testItem = new TaxableItem("Perfume", 47.50, true, testRegister);
+        scan(new TaxableItem("Perfume", 47.50, true));
 
-        assertEquals(7.15, testItem.getItemTax());
+        Receipt receipt = submit();
+
+        assertEquals(7.15, receipt.getTax());
     }
 
     @Test
     public void testTaxableNonImportedItemsBeingTaxedProperly() {
-        Register testRegister = new Register(0.1, 0.05);
-        TaxableItem testItem = new TaxableItem("Music CD", 14.99, false, testRegister);
+        scan(new TaxableItem("Music CD", 14.99, false));
 
-        assertEquals(1.50, testItem.getItemTax());
+        Receipt receipt = submit();
+
+        assertEquals(1.50, receipt.getTax());
     }
 }

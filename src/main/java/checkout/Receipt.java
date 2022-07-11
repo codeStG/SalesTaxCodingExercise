@@ -10,13 +10,13 @@ public class Receipt {
     private final double subtotal;
     private final double total;
 
-    //TODO: This is way too complex; a receipt prints out information. That is it
     public Receipt(List<IProduct> products, double subtotal, double total) {
         this.products = products;
         this.subtotal = subtotal;
         this.total = total;
     }
 
+    //TODO: THE RECEIPT SHOULD ONLY PRINT
     public double getSubtotal() {
         return Math.round(subtotal * 100.0) / 100.0;
     }

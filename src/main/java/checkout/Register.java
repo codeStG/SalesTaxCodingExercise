@@ -1,22 +1,15 @@
 package checkout;
 
 import products.IProduct;
-import products.impl.Item;
-
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Register {
     private static final double SALES_TAX = 0.1;
     private static final double IMPORT_DUTY = .05;
+    private static List<IProduct> products = new ArrayList<>();
     private static double subtotal = 0;
     private static double total = 0;
-    private static List<IProduct> products = new ArrayList<>();
-
-    public Register() {
-        reset();
-    }
 
     public static void reset() {
         subtotal = 0;
@@ -25,19 +18,17 @@ public class Register {
     }
 
     public static Receipt submit() {
-        calculateTotals();
         return new Receipt(products, subtotal, total);
     }
 
     public static void scan(IProduct product) {
         products.add(product);
+        calculateTotal(product);
     }
 
-    private static void calculateTotals() {
-        for(IProduct product: products) {
-            subtotal += Math.round(product.getPrice() * 100.0) / 100.0;
-            total += Math.round((product.getPrice() + calculateItemTax(product)) * 100.0) / 100.0;
-        }
+    private static void calculateTotal(IProduct product) {
+        subtotal += Math.round(product.getPrice() * 100.0) / 100.0;
+        total += Math.round((product.getPrice() + calculateItemTax(product)) * 100.0) / 100.0;
     }
 
     public static double calculateItemTax(IProduct product) {
@@ -52,11 +43,11 @@ public class Register {
         }
     }
 
-    public double getSubtotal() {
+    public static double getSubtotal() {
         return subtotal;
     }
 
-    public double getTotal() {
+    public static double getTotal() {
         return total;
     }
 }

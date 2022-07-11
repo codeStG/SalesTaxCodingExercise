@@ -1,28 +1,39 @@
 package products.impl;
 
+import checkout.Receipt;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import checkout.Register;
 import products.impl.NonTaxableItem;
 
+import static checkout.Register.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
 public class NonTaxableItemTest {
-    Register testRegister = new Register(0.1, 0.05);
+
+    @BeforeEach
+    public void clearOutRegister() {
+        reset();
+    }
 
     @Test
     public void testNonTaxableImportedItemsBeingTaxedProperly() {
-        NonTaxableItem testItem = new NonTaxableItem("Box of Chocolates", 10.00, true, testRegister);
+        scan(new NonTaxableItem("Box of Chocolates", 10.00, true));
 
-        assertEquals(0.50, testItem.getItemTax());
+        Receipt receipt = submit();
+
+        assertEquals(0.50, receipt.getTax());
     }
 
     @Test
     public void testNonTaxableNonImportedItemsBeingTaxedProperly() {
-        NonTaxableItem testItem = new NonTaxableItem("Book", 12.49, false, testRegister);
+        scan(new NonTaxableItem("Book", 12.49, false));
 
-        assertEquals(0.0, testItem.getItemTax());
+        Receipt receipt = submit();
+
+        assertEquals(0.0, receipt.getTax());
     }
 
 }
