@@ -1,15 +1,25 @@
 package checkout;
 
 import products.IProduct;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static checkout.Receipt.print;
 
 public class Register {
     private static final double SALES_TAX = 0.1;
     private static final double IMPORT_DUTY = .05;
+    private static DecimalFormat decimalFormat = new DecimalFormat("#.00");
     private static List<IProduct> products = new ArrayList<>();
     private static double subtotal = 0;
     private static double total = 0;
+
+    public static void scan(IProduct product) {
+        products.add(product);
+        calculateTotal(product);
+    }
 
     public static void reset() {
         subtotal = 0;
@@ -17,13 +27,8 @@ public class Register {
         products = new ArrayList<>();
     }
 
-    public static Receipt submit() {
-        return new Receipt(products, subtotal, total);
-    }
-
-    public static void scan(IProduct product) {
-        products.add(product);
-        calculateTotal(product);
+    public static void submit() {
+        print();
     }
 
     private static void calculateTotal(IProduct product) {
@@ -33,7 +38,7 @@ public class Register {
 
     public static double calculateItemTax(IProduct product) {
         if(product.isImported() && product.isTaxable()) {
-            return (Math.ceil((product.getPrice() * SALES_TAX) * 20.0) / 20.0) + (Math.ceil((product.getPrice() * IMPORT_DUTY) * 20.0) / 20.0);
+            return (Math.ceil((product.getPrice() * SALES_TAX) * 20.0) / 20.0) + ;
         } else if(product.isTaxable()){
             return Math.ceil((product.getPrice() * SALES_TAX) * 20.0) / 20.0;
         } else if(product.isImported()) {
@@ -43,11 +48,20 @@ public class Register {
         }
     }
 
-    public static double getSubtotal() {
-        return subtotal;
+    public static List<IProduct> getProducts() {
+        return products;
     }
 
-    public static double getTotal() {
-        return total;
+    public static double getTax() {
+        double tax = Math.round((total - subtotal) * 100.0) / 100.0;
+        return tax;
+    }
+
+    public static String getSubtotal() {
+        return decimalFormat.format(subtotal);
+    }
+
+    public static String getTotal() {
+        return decimalFormat.format(total);
     }
 }

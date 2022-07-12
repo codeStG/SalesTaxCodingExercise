@@ -1,37 +1,12 @@
 package checkout;
 
 import products.IProduct;
-import static checkout.Register.calculateItemTax;
-
-import java.util.List;
+import static checkout.Register.*;
 
 public class Receipt {
-    private final List<IProduct> products;
-    private final double subtotal;
-    private final double total;
 
-    public Receipt(List<IProduct> products, double subtotal, double total) {
-        this.products = products;
-        this.subtotal = subtotal;
-        this.total = total;
-    }
-
-    //TODO: THE RECEIPT SHOULD ONLY PRINT
-    public double getSubtotal() {
-        return Math.round(subtotal * 100.0) / 100.0;
-    }
-
-    public double getTotal() {
-        return Math.round(total * 100.0) / 100.0;
-    }
-
-    public double getTax() {
-        double tax = Math.round((getTotal() - getSubtotal()) * 100.0) / 100.0;
-        return tax;
-    }
-
-    public void print() {
-        for(IProduct product : products) {
+    public static void print() {
+        for(IProduct product : getProducts()) {
             System.out.println(product.getName());
             System.out.println("\t\t\t\t\t" + Math.round((product.getPrice() + calculateItemTax(product)) * 100.0) / 100.0);
             System.out.println("--------------------------");
