@@ -5,7 +5,6 @@ import utilities.ICalculator;
 import utilities.impl.ImportDutyCalculator;
 import utilities.impl.TaxCalculator;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import static checkout.Receipt.print;
 public class Register {
     private static final ICalculator taxCalculator = new TaxCalculator();
     private static final ICalculator importDutyCalculator = new ImportDutyCalculator();
-    private static final DecimalFormat decimalFormat = new DecimalFormat("#.00");
     private static List<IProduct> products = new ArrayList<>();
     private static double subtotal = 0;
     private static double total = 0;
@@ -24,13 +22,18 @@ public class Register {
         calculateTotal(product);
     }
 
-    public static void reset() {
+    public static void checkout() {
+        submitTransaction();
+        clearRegister();
+    }
+
+    private static void clearRegister() {
         subtotal = 0;
         total = 0;
         products = new ArrayList<>();
     }
 
-    public static void submit() {
+    private static void submitTransaction() {
         print();
     }
 
@@ -57,8 +60,8 @@ public class Register {
         return products;
     }
 
-    public static String getSubtotal() {
-        return decimalFormat.format(subtotal);
+    public static double getSubtotal() {
+        return subtotal;
     }
 
     public static double getTax() {
@@ -66,7 +69,7 @@ public class Register {
         return tax;
     }
 
-    public static String getTotal() {
-        return decimalFormat.format(total);
+    public static double getTotal() {
+        return total;
     }
 }

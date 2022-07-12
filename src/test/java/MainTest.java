@@ -10,7 +10,7 @@ public class MainTest {
 
     @BeforeEach
     public void clearOutRegister() {
-        reset();
+        checkout();
     }
 
     @Test

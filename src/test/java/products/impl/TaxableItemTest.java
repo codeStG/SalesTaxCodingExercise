@@ -10,7 +10,7 @@ public class TaxableItemTest {
 
     @BeforeEach
     public void clearOutRegister() {
-        reset();
+        checkout();
     }
 
     @Test

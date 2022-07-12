@@ -12,7 +12,7 @@ public class RegisterTest {
 
     @BeforeEach
     public void clearOutRegister() {
-        reset();
+        checkout();
     }
 
     @Test
@@ -20,7 +20,7 @@ public class RegisterTest {
         scan(new TaxableItem("Perfume", 47.50, true));
         scan(new NonTaxableItem("Book", 12.49, false));
 
-        reset();
+        checkout();
 
         assertEquals(0, getSubtotal());
         assertEquals(0, getTotal());
