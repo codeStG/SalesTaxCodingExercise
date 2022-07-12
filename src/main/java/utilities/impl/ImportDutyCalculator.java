@@ -6,7 +6,7 @@ import products.IProduct;
 public class ImportDutyCalculator implements ICalculator {
 
     @Override
-    public double calculate(double productPrice) {
-        return Math.ceil((productPrice * IMPORT_DUTY) * 20.0) / 20.0;
+    public double calculate(double price) {
+        return Math.ceil(price * IMPORT_DUTY * 20.0) / 20.0;
     }
 }

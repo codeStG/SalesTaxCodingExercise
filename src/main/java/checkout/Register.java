@@ -13,13 +13,18 @@ import static checkout.Receipt.print;
 public class Register {
     private static final ICalculator taxCalculator = new TaxCalculator();
     private static final ICalculator importDutyCalculator = new ImportDutyCalculator();
-    private static List<IProduct> products = new ArrayList<>();
+    private static final List<IProduct> shoppingCart = new ArrayList<>();
     private static double subtotal = 0;
     private static double total = 0;
 
     public static void scan(IProduct product) {
-        products.add(product);
+        shoppingCart.add(product);
         calculateTotal(product);
+    }
+
+    private static void calculateTotal(IProduct product) {
+        subtotal += Math.round(product.getPrice() * 100.0) / 100.0;
+        total += Math.round((product.getPrice() + calculateProductFees(product)) * 100.0) / 100.0;
     }
 
     public static void checkout() {
@@ -30,16 +35,11 @@ public class Register {
     private static void clearRegister() {
         subtotal = 0;
         total = 0;
-        products = new ArrayList<>();
+        shoppingCart.clear();
     }
 
     private static void submitTransaction() {
         print();
-    }
-
-    private static void calculateTotal(IProduct product) {
-        subtotal += Math.round(product.getPrice() * 100.0) / 100.0;
-        total += Math.round((product.getPrice() + calculateProductFees(product)) * 100.0) / 100.0;
     }
 
     public static double calculateProductFees(IProduct product) {
@@ -56,8 +56,8 @@ public class Register {
         }
     }
 
-    public static List<IProduct> getProducts() {
-        return products;
+    public static List<IProduct> getShoppingCart() {
+        return shoppingCart;
     }
 
     public static double getSubtotal() {
@@ -65,8 +65,7 @@ public class Register {
     }
 
     public static double getTax() {
-        double tax = Math.round((total - subtotal) * 100.0) / 100.0;
-        return tax;
+        return Math.round((total - subtotal) * 100.0) / 100.0;
     }
 
     public static double getTotal() {
