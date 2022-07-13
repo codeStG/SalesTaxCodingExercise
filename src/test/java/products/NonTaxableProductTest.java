@@ -1,4 +1,4 @@
-package products.impl;
+package products;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static checkout.Register.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NonTaxableItemTest {
+public class NonTaxableProductTest {
 
     @BeforeEach
     public void clearOutRegister() {
@@ -15,15 +15,15 @@ public class NonTaxableItemTest {
 
     @Test
     public void testNonTaxableImportedItemsBeingTaxedProperly() {
-        scan(new NonTaxableItem("Box of Chocolates", 10.00, true));
+        scan(new Product("Box of Chocolates", 10.00, true, false));
 
-        assertEquals(0.50, getTax());
+        assertEquals(0.50, getTaxesAndDuties());
     }
 
     @Test
     public void testNonTaxableNonImportedItemsBeingTaxedProperly() {
-        scan(new NonTaxableItem("Book", 12.49, false));
+        scan(new Product("Book", 12.49, false, false));
 
-        assertEquals(0.0, getTax());
+        assertEquals(0.0, getTaxesAndDuties());
     }
 }

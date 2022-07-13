@@ -1,19 +1,20 @@
-package products.impl;
+package products;
 
-import products.IProduct;
+import utilities.ICalculator;
+import utilities.impl.TaxesAndDutiesCalculator;
 
-import static checkout.Register.calculateProductFees;
-
-public abstract class Item implements IProduct {
+public class Product {
     private final String name;
     private final double price;
     private final boolean isImported;
+    private final boolean isTaxable;
 
     //TODO: Possibly change isTaxable to category and base taxability on it
-    public Item(String name, double price, boolean isImported) {
+    public Product(String name, double price, boolean isImported, boolean isTaxable) {
         this.name = name;
         this.price = price;
         this.isImported = isImported;
+        this.isTaxable = isTaxable;
     }
 
     public String getName() {
@@ -25,12 +26,14 @@ public abstract class Item implements IProduct {
     }
 
     public double getPriceWithFees() {
-        return Math.round(price + calculateProductFees(this)) * 100.0 / 100.0;
+        ICalculator taxesAndDutiesCalculator = new TaxesAndDutiesCalculator();
+
+        return Math.round(price + taxesAndDutiesCalculator.calculate(this)) * 100.0 / 100.0;
     }
 
     public boolean isImported() {
         return isImported;
     }
 
-    public abstract boolean isTaxable();
+    public boolean isTaxable() { return isTaxable; };
 }

@@ -1,9 +1,10 @@
 package checkout;
 
-import products.IProduct;
+import products.Product;
 import utilities.ICalculator;
-import utilities.impl.ImportDutyCalculator;
-import utilities.impl.TaxCalculator;
+import utilities.impl.SubTotalCalculator;
+import utilities.impl.TaxesAndDutiesCalculator;
+import utilities.impl.TotalCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +12,31 @@ import java.util.List;
 import static checkout.Receipt.print;
 
 public class Register {
-    private static final ICalculator taxCalculator = new TaxCalculator();
-    private static final ICalculator importDutyCalculator = new ImportDutyCalculator();
-    private static final List<IProduct> shoppingCart = new ArrayList<>();
+    private static final ICalculator taxesAndDutiesCalculator = new TaxesAndDutiesCalculator();
+    private static final ICalculator subtotalCalculator = new SubTotalCalculator();
+    private static final ICalculator totalCalculator = new TotalCalculator();
+    private static final List<Product> shoppingCart = new ArrayList<>();
     private static double subtotal = 0;
+    private static double taxesAndDuties = 0;
     private static double total = 0;
 
-    public static void scan(IProduct product) {
+    public static void scan(Product product) {
         shoppingCart.add(product);
+        calculateSubtotal(product);
+        calculateTaxesAndDuties(product);
         calculateTotal(product);
     }
 
-    private static void calculateTotal(IProduct product) {
-        subtotal += Math.round(product.getPrice() * 100.0) / 100.0;
-        total += Math.round((product.getPrice() + calculateProductFees(product)) * 100.0) / 100.0;
+    private static void calculateSubtotal(Product product) {
+        subtotal += subtotalCalculator.calculate(product);
+    }
+
+    private static void calculateTaxesAndDuties(Product product) {
+        taxesAndDuties += taxesAndDutiesCalculator.calculate(product);
+    }
+
+    private static void calculateTotal(Product product) {
+        total += totalCalculator.calculate(product);
     }
 
     public static void checkout() {
@@ -34,6 +46,7 @@ public class Register {
 
     private static void clearRegister() {
         subtotal = 0;
+        taxesAndDuties = 0;
         total = 0;
         shoppingCart.clear();
     }
@@ -42,21 +55,7 @@ public class Register {
         print();
     }
 
-    public static double calculateProductFees(IProduct product) {
-        double productPrice = product.getPrice();
-
-        if(product.isImported() && product.isTaxable()) {
-            return  taxCalculator.calculate(productPrice) + importDutyCalculator.calculate(productPrice);
-        } else if(product.isTaxable()){
-            return taxCalculator.calculate(productPrice);
-        } else if(product.isImported()) {
-            return importDutyCalculator.calculate(productPrice);
-        } else {
-            return 0.0;
-        }
-    }
-
-    public static List<IProduct> getShoppingCart() {
+    public static List<Product> getShoppingCart() {
         return shoppingCart;
     }
 
@@ -64,8 +63,8 @@ public class Register {
         return subtotal;
     }
 
-    public static double getTax() {
-        return Math.round((total - subtotal) * 100.0) / 100.0;
+    public static double getTaxesAndDuties() {
+        return taxesAndDuties;
     }
 
     public static double getTotal() {
