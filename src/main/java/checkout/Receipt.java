@@ -19,7 +19,7 @@ public class Receipt {
     }
 
     private void generateProductLines() {
-        for(Product product : getShoppingCart()) {
+        for (Product product : getShoppingCart()) {
             System.out.println(product.getName());
             System.out.println("\t\t\t\t\t" + decimalFormatter.format(getSingleProductTotal(product)));
             System.out.println("--------------------------");

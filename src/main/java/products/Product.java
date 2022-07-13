@@ -25,5 +25,7 @@ public class Product {
         return isImported;
     }
 
-    public boolean isTaxable() { return isTaxable; };
+    public boolean isTaxable() {
+        return isTaxable;
+    }
 }

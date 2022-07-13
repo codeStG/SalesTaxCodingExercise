@@ -4,15 +4,16 @@ import products.Product;
 import utilities.ICalculator;
 
 public class TaxesAndDutiesCalculator implements ICalculator {
+
     @Override
     public double calculate(Product product) {
         double price = product.getPrice();
 
-        if(product.isImported() && product.isTaxable()) {
-            return  calculateTaxes(price) + calculateImportDuties(price);
-        } else if(product.isTaxable()){
+        if (product.isImported() && product.isTaxable()) {
+            return calculateTaxes(price) + calculateImportDuties(price);
+        } else if (product.isTaxable()) {
             return calculateTaxes(price);
-        } else if(product.isImported()) {
+        } else if (product.isImported()) {
             return calculateImportDuties(price);
         } else {
             return 0.0;

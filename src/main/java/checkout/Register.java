@@ -1,6 +1,5 @@
 package checkout;
 
-import checkout.Receipt;
 import products.Product;
 import utilities.ICalculator;
 import utilities.impl.SubTotalCalculator;
