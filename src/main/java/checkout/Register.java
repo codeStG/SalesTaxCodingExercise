@@ -1,5 +1,6 @@
 package checkout;
 
+import checkout.Receipt;
 import products.Product;
 import utilities.ICalculator;
 import utilities.impl.SubTotalCalculator;
@@ -8,8 +9,6 @@ import utilities.impl.TotalCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static checkout.Receipt.print;
 
 public class Register {
     private static final ICalculator taxesAndDutiesCalculator = new TaxesAndDutiesCalculator();
@@ -44,15 +43,15 @@ public class Register {
         clearRegister();
     }
 
+    private static void submitTransaction() {
+        new Receipt().print();
+    }
+
     private static void clearRegister() {
+        shoppingCart.clear();
         subtotal = 0;
         taxesAndDuties = 0;
         total = 0;
-        shoppingCart.clear();
-    }
-
-    private static void submitTransaction() {
-        print();
     }
 
     public static List<Product> getShoppingCart() {
@@ -69,5 +68,9 @@ public class Register {
 
     public static double getTotal() {
         return total;
+    }
+
+    public static double getSingleProductTotal(Product product) {
+        return totalCalculator.calculate(product);
     }
 }
